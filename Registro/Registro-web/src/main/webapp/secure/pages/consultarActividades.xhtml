@@ -1,0 +1,331 @@
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="contenido">
+
+		<h:form id="consultaActvidadesForm">
+			<p:panel header="#{bundle.lb_consultaActividad}">
+				<div class="ui-fluid">
+					<p:growl id="growl" showDetail="true" sticky="true" />
+
+					<p:panelGrid columns="4"
+						columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel value="#{bundle.lb_actividad}" for="typeActi" />
+
+						<p:panelGrid columns="2"
+							columnClasses="aux-force-padding-1px ui-grid-col-10,aux-force-padding-1px ui-grid-col-2">
+
+							<p:selectOneMenu id="typeActi" required="true"
+								value="#{consultaActividad.actividadBusqueda}">
+								<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+								<f:selectItem itemLabel="Proceso Formativo" itemValue="PF" />
+								<f:selectItem itemLabel="Asistencia Técnica" itemValue="AS" />
+								<f:selectItem itemLabel="Mesa de Trabajo" itemValue="MT" />
+								<f:selectItem itemLabel="Movilizacion Social" itemValue="MS" />
+								<f:selectItem itemLabel="Foro/Seminario" itemValue="FS" />
+								<f:selectItem itemLabel="Feria de Sexualidad" itemValue="SF" />
+								<f:selectItem itemLabel="Formacion para el Trabajo"
+									itemValue="FT" />
+								<f:selectItem itemLabel="Diplomados" itemValue="DI" />
+								<f:selectItem
+									itemLabel="Entrenamiento en técnica médicas y quirúrgicas"
+									itemValue="EQ" />
+								<p:ajax event="change"
+									listener="#{consultaActividad.consultarActividad}"
+									update="@form" />
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+					</p:panelGrid>
+				</div>
+			</p:panel>
+
+			<p:outputPanel id="panels" layout="none">
+				<div class="ui-fluid">
+					<p:panel header="Actividades Registradas"
+						rendered="#{consultaActividad.showRegistradas}">
+						<p:dataTable id="Actividades" var="registro"
+							value="#{consultaActividad.lstActividad}" selectionMode="single"
+							selection="#{consultaActividad.chregistactiv}" paginator="true"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+							rowKey="#{registro.hcrlnumero}" rows="10"
+							rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}"
+							emptyMessage="No existen registros">
+							<p:ajax event="rowSelect"
+								listener="#{consultaActividad.consultaUsuariosxActividad}"
+								oncomplete="PF('modalConsultaUsuario').show();"
+								update="registroUsuarioForm" />
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha de Actividad" />
+								</f:facet>
+								<h:outputText value="#{registro.hcrdfechactiv}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Departamento" />
+								</f:facet>
+
+								<p:selectOneMenu value="#{registro.hcrcdepartame}"
+									disabled="true" converter="omnifaces.SelectItemsConverter">
+									<f:selectItems value="#{registroActividad.listDepartamentos}"
+										var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fecha de Registro" />
+								</f:facet>
+								<h:outputText value="#{registro.hcrdfechregist}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Tipo Actividad" />
+								</f:facet>
+								<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+									disabled="true" value="#{registro.hcrctipoactivi}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Proceso Formativo" itemValue="PF" />
+									<f:selectItem itemLabel="Asistencia Técnica" itemValue="AS" />
+									<f:selectItem itemLabel="Mesa de Trabajo" itemValue="MT" />
+									<f:selectItem itemLabel="Movilizacion Social" itemValue="MS" />
+									<f:selectItem itemLabel="Foro/Seminario" itemValue="FS" />
+									<f:selectItem itemLabel="Feria de Sexualidad" itemValue="SF" />
+									<f:selectItem itemLabel="Formacion para el Trabajo"
+										itemValue="FT" />
+									<f:selectItem itemLabel="Diplomados" itemValue="DI" />
+									<f:selectItem
+										itemLabel="Entrenamiento en técnica médicas y quirúrgicas"
+										itemValue="EQ" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Intensidad en Horas" />
+								</f:facet>
+								<h:outputText value="#{registro.hcrnintenhoras}" />
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Modalidad" />
+								</f:facet>
+								<p:selectOneMenu value="#{registroActividad.modalidad}"
+									disabled="true" converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="Presencial" itemValue="PR" />
+									<f:selectItem itemLabel="Virtual" itemValue="VI" />
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Linea Acción" />
+								</f:facet>
+								<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+									disabled="true" value="#{registro.hcrclineaccion}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Salud" itemValue="SA" />
+									<f:selectItem itemLabel="Farma" itemValue="FA" />
+									<f:selectItem itemLabel="Investigaciones" itemValue="IV" />
+									<f:selectItem itemLabel="Educa" itemValue="ED" />
+									<f:selectItem itemLabel="Incidencia" itemValue="IN" />
+									<f:selectItem itemLabel="Jovenes" itemValue="JO" />
+									<f:selectItem itemLabel="Mercadeo" itemValue="ME" />
+									<f:selectItem itemLabel="Comunicaciones" itemValue="CO" />
+
+
+								</p:selectOneMenu>
+							</p:column>
+
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Población" />
+								</f:facet>
+								<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+									disabled="true" value="#{registro.hcrcpoblacion}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Docentes" itemValue="DO" />
+									<f:selectItem itemLabel="Padres/Madres" itemValue="PM" />
+									<f:selectItem itemLabel="Estudiantes" itemValue="ES" />
+									<f:selectItem itemLabel="Líderes" itemValue="LI" />
+									<f:selectItem itemLabel="Profesionales" itemValue="PR" />
+									<f:selectItem itemLabel="Periodistas" itemValue="PE" />
+									<f:selectItem itemLabel="Funcionarios Profamilia"
+										itemValue="FP" />
+									<f:selectItem itemLabel="Comunidad" itemValue="CO" />
+
+								</p:selectOneMenu>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Vulnerabilidad" />
+								</f:facet>
+								<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+									disabled="true" value="#{registro.hcrcvulnerabil}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Habitantes de Calle" itemValue="HC" />
+									<f:selectItem itemLabel="Población infantil a cargo ICBF"
+										itemValue="PI" />
+									<f:selectItem itemLabel="Madres comunitarias" itemValue="MC" />
+									<f:selectItem itemLabel="Discapacitados" itemValue="DI" />
+									<f:selectItem itemLabel="Desmovilidados" itemValue="DM" />
+									<f:selectItem itemLabel="Desplazados" itemValue="DP" />
+									<f:selectItem itemLabel="Trabajadores sexuales" itemValue="TS" />
+									<f:selectItem itemLabel="Personas privadas de la libertad"
+										itemValue="PL" />
+									<f:selectItem itemLabel="Inmigrantes " itemValue="IN" />
+
+								</p:selectOneMenu>
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+				</div>
+			</p:outputPanel>
+		</h:form>
+		<p:dialog widgetVar="modalConsultaUsuario"
+			header="Usuarios por Actividades" resizable="false"
+			id="usuariosxActividades" appendTo="@(body)" width="1200"
+			modal="true" dynamic="true">
+			<p:outputPanel id="panels1" layout="none">
+				<h:form id="registroUsuarioForm">
+					<p:dataTable var="usuario"
+						value="#{consultaActividad.lstActividadxusuarios}"
+						paginator="true" id="dataUsuario"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+						rows="20" rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}"
+						emptyMessage="No existen registros">
+
+
+						<f:facet name="{Exporters}">
+							<h:commandLink>
+								<p:graphicImage
+									value="#{request.contextPath}/javax.faces.resource/img/excel.png.pf"
+									width="24" />
+								<p:dataExporter type="xls" target="dataUsuario"
+									fileName="Usuarios" options="#{consultaActividad.excelOpt}" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage
+									value="#{request.contextPath}/javax.faces.resource/img/pdf.png.pf"
+									width="24" />
+								<p:dataExporter type="pdf" target="dataUsuario"
+									fileName="Usuarios" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage
+									value="#{request.contextPath}/javax.faces.resource/img/csv.png.pf"
+									width="24" />
+								<p:dataExporter type="csv" target="dataUsuario"
+									fileName="Usuarios" />
+							</h:commandLink>
+						</f:facet>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Fecha de Actividad" />
+							</f:facet>
+							<h:outputText value="#{usuario.actividad.hcrdfechactiv}" />
+						</p:column>
+
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo Actividad" />
+							</f:facet>
+							<h:outputText value="#{usuario.nombreActividad}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nombre de la Actividad" />
+							</f:facet>
+							<h:outputText value="#{usuario.actividad.hcrcnombacti}" />
+						</p:column>
+
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Departamento" />
+							</f:facet>
+
+							<p:selectOneMenu value="#{usuario.actividad.hcrcdepartame}"
+								disabled="true" converter="omnifaces.SelectItemsConverter">
+								<f:selectItems value="#{registroActividad.listDepartamentos}"
+									var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+							</p:selectOneMenu>
+						</p:column>
+
+						<p:column headerText="Tipo de Identificación">
+
+							<p:selectOneMenu value="#{usuario.usuarioreg.hcuetipoiden}"
+								disabled="true" converter="omnifaces.SelectItemsConverter">
+								<f:selectItems
+									value="#{registroActividad.listTipoIdentificacion}" var="ref"
+									itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Numero de Documento">
+							<h:outputText value="#{usuario.usuarioreg.hcuanumeiden}" />
+						</p:column>
+						<p:column headerText="Nombres y Apellidos">
+							<h:outputText
+								value="#{usuario.usuarioreg.hcucprimerapel} #{usuario.usuarioreg.hcucsegundapel} #{usuario.usuarioreg.hcucprimernomb} #{usuario.usuarioreg.hcucsegundapel}" />
+						</p:column>
+						<p:column headerText="Correo">
+							<h:outputText value="#{usuario.usuarioreg.hcuccorreoelec}" />
+						</p:column>
+						<p:column headerText="Celular">
+							<h:outputText value="#{usuario.usuarioreg.hcuccelular}" />
+						</p:column>
+						<p:column headerText="Edad">
+							<h:outputText value="#{usuario.usuarioreg.hcunedad}" />
+						</p:column>
+
+						<p:column headerText="Asistencia">
+							<h:outputText value="#{usuario.asisteActividad}" />
+						</p:column>
+
+
+
+					</p:dataTable>
+
+
+
+				</h:form>
+			</p:outputPanel>
+		</p:dialog>
+
+
+
+
+
+
+
+
+
+
+
+	</ui:define>
+
+</ui:composition>

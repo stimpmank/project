@@ -1,0 +1,231 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/templates/template.xhtml">
+
+    <ui:define name="content_header">
+        <h2 class="align-center">
+            ** Detalle de Novedades **
+        </h2>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <p:panel header="#{bundle.header_gestion_horario}" id="pprincipal" >
+            <div class="ui-fluid" >
+
+                <h:form id="detalleNovQueryForm">
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" styleClass="ui-panelgrid-blank">
+                       
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_sede_gen}" for="sede_gen" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+                                <p:autoComplete id="sede_gen"
+                                                title="#{bundle.tl_sede}"
+                                                value="#{detalleNovedades.cpclinicaSelect}"
+                                                completeMethod="#{detalleNovedades.autoComplCpclinica}"
+                                                var="item"
+                                                itemValue="#{item}" itemLabel="#{item.cclcnombre}"
+                                                forceSelection="true" dropdown="true" 
+                                                required="true" placeholder="#{bundle.rq_sede}">
+
+                                    <o:converter converterId="omnifaces.ListConverter"  list="#{detalleNovedades.cpclinicaDTOList}" />
+
+                                    <p:ajax event="itemSelect" process="@this" update="@form" listener="#{detalleNovedades.loadCpprofesioDTOListByCpclinicaQuery}"/> 
+                                    <p:ajax event="change" process="@this" update="@form" listener="#{detalleNovedades.loadCpprofesioDTOListByCpclinicaQuery}"/> 
+
+                                </p:autoComplete>
+                                <p:commandButton icon="fa fa-search"
+                                                 update="@widgetVar(modalSedes)" 
+                                                 process="@this" 
+                                                 oncomplete="PF('modalSedes').show();" 
+                                                 actionListener="#{detalleNovedades.clearModalCpclinica}"/>
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_profesional_gen}" for="prof_gen" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                                <p:autoComplete id="prof_gen"
+                                                title="#{bundle.tl_profasional}"
+                                                value="#{detalleNovedades.cpprofesioSelect}"
+                                                completeMethod="#{detalleNovedades.autoComplCpprofesio}"
+                                                disabled="#{empty detalleNovedades.cpclinicaSelect}"
+                                                var="item"
+                                                itemValue="#{item}" itemLabel="#{item.cpfcnombre}"
+                                                forceSelection="true" dropdown="true" 
+                                                required="true" placeholder="#{bundle.rq_profasional}">
+
+                                    <o:converter converterId="omnifaces.ListConverter"  list="#{detalleNovedades.cpprofesioDTOList}" />
+
+                                    <p:ajax event="itemSelect" process="@this" update="@form"/> 
+                                    <p:ajax event="change" process="@this" update="@form"/> 
+
+                                </p:autoComplete>
+                                <p:commandButton icon="fa fa-search"
+                                                 update="@widgetVar(modalProfesionales)" 
+                                                 process="@this" 
+                                                 oncomplete="PF('modalProfesionales').show();" 
+                                                 actionListener="#{detalleNovedades.clearModalCpprofesio}"/>
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_fech_ini_nov}" for="fechaIniNov" />
+                            <p:calendar navigator="true" yearRange="c-20:c+1"  maxlength="60" id="fechaIniNov" value="#{detalleNovedades.fechaInicioNovedad}" pattern="dd/MM/yyyy" 
+                                        title="#{bundle.lb_fech_ini_nov}" required="true" label="#{bundle.lb_fech_ini_nov}">
+                                <p:ajax event="dateSelect" />
+                            </p:calendar>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_fech_fin_nov}" for="fechaFinNov" />
+                            <p:calendar navigator="true" yearRange="c-20:c+1"  maxlength="60" id="fechaFinNov" value="#{detalleNovedades.fechaFinNovedad}" pattern="dd/MM/yyyy" 
+                                        title="#{bundle.lb_fech_fin_nov}" required="true" label="#{bundle.lb_fech_fin_nov}" >
+                                <p:ajax event="dateSelect" />
+                            </p:calendar>
+                        </h:panelGroup>
+
+
+                    </p:panelGrid>
+
+
+                    <p:spacer/>
+                    <div>
+                        <p:panel styleClass="ui-button-group">
+
+                            <p:commandButton icon="fa fa-search" 
+                                             value="#{bundle.bt_buscar_gen}" 
+                                             partialSubmit="true"
+                                             actionListener="#{detalleNovedades.consultarDetalleNovedades}"
+                                             disabled="#{empty detalleNovedades.cpclinicaSelect or empty detalleNovedades.cpprofesioSelect}"
+                                             update="@widgetVar(growl), @form" 
+                                             process="@this " style="width: 200px"/>
+
+                        </p:panel>
+                    </div>
+                    <p:spacer/>
+
+                    <p:outputPanel id="resultadoConsultaDetalleNovedad" >
+                        <p:outputPanel rendered="#{not empty detalleNovedades.novedadDetalleDTOList}">
+                            <h3 class="align-left">
+                                Novedades
+                            </h3>
+
+                            <p:commandButton widgetVar="eliminarDetalleNovedades" icon="fa fa-trash" 
+                                             value="Eliminar" 
+                                             partialSubmit="true"
+                                             actionListener="#{detalleNovedades.eliminarDetalleNovedades}"
+                                             disabled="#{empty detalleNovedades.novedadDetalleDTOSelectedList}"
+                                             update="@widgetVar(growl), @form" 
+                                             process="@this" style="width: 200px"/>
+                            <div class="ui-fluid">
+
+                                <!-- se le quito la seleccion-->
+                                <p:dataTable
+                                    id="novedadDetalleDatalist" value="#{detalleNovedades.novedadDetalleDTOList}" var="item"   
+                                    selection="#{detalleNovedades.novedadDetalleDTOSelectedList}"
+                                    rowKey="#{item.id}"
+                                    paginator="true"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                    rows="10"
+                                    rowsPerPageTemplate="10,50,100">
+
+                                    <p:ajax event="toggleSelect" update="@form, @widgetVar(eliminarDetalleNovedades)"  process="@this"/>
+                                    <p:ajax event="rowUnselect" update="@form, @widgetVar(eliminarDetalleNovedades)"  process="@this"/>
+                                    <p:ajax event="rowSelect" update="@form, @widgetVar(eliminarDetalleNovedades)"  process="@this"/>
+                                    <p:ajax event="rowUnselectCheckbox" update="@form, @widgetVar(eliminarDetalleNovedades)"  process="@this"/>
+                                    <p:ajax event="rowSelectCheckbox" update="@form, @widgetVar(eliminarDetalleNovedades)"  process="@this"/>
+
+                                    <p:column selectionMode="multiple" style="width:40px;text-align:center" />
+
+                                    <p:column style="width: 10%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Profesional"/>
+                                        </f:facet>
+                                        <h:outputText value="#{detalleNovedades.getCpprofesioById(item.diaNovedadDTO.novedadDTO.programacionDTO.idProfesional).getCpfcnombre()}"/>
+                                    </p:column>
+
+                                    <p:column style="width: 10%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Clinica"/>
+                                        </f:facet>
+                                        <h:outputText value="#{detalleNovedades.getCpclinicaById(item.diaNovedadDTO.novedadDTO.programacionDTO.idSede).getCclcnombre()}"/>
+                                    </p:column>
+
+                                    <p:column style="width: 10%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Descripcion"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.diaNovedadDTO.novedadDTO.descripcion}"/>
+                                    </p:column>
+
+                                    <p:column style="width: 10%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Tipo novedad"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.diaNovedadDTO.tipoNovedad == 0 ? bundle.txt_bloqueo : bundle.txt_apertura}"/>
+                                    </p:column>
+
+                                    <p:column style="width: 20%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Fecha"/>
+                                        </f:facet>
+                                        <h:outputText value="#{item.fecha}">
+                                            <f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+                                        </h:outputText>
+                                    </p:column>
+
+                                    <p:column style="width: 10%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Intrevalo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{''.concat(item.diaNovedadDTO.horaInicio).concat(' - ').concat(item.diaNovedadDTO.horaFin)}"/>
+                                    </p:column>
+
+                                    <p:column style="width: 40%">
+                                        <f:facet name="header">
+                                            <h:outputText value="*Creado por"/>
+                                        </f:facet>
+                                        <h:outputText value="#{detalleNovedades.getNombreDia(item.diaNovedadDTO.dia)}"/>
+                                    </p:column>
+
+                                </p:dataTable>
+
+
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                </h:form>
+            </div>
+        </p:panel>
+
+        <p:dialog widgetVar="modalProfesionales" header="#{bundle.lb_profesional_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <p:ajax event="close" update="detalleNovQueryForm" listener="#{detalleNovedades.resetCpprofesioDTOListByCpclinica}" />
+            <ui:include src="fragments/modal-profesionales.xhtml">
+                <ui:param name="bean" value="#{detalleNovedades}"/>
+                <ui:param name="modalName" value="modalProfesionales"/>
+                <ui:param name="componentsUpdate" value="detalleNovQueryForm"/>
+            </ui:include>            
+        </p:dialog>
+
+        <!-- Inicio Modales Sedes -->
+        <p:dialog widgetVar="modalSedes" header="#{bundle.lb_sede_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <p:ajax event="close" update="detalleNovQueryForm" listener="#{detalleNovedades.resetCpclinicaDTOList}" />
+            <ui:include src="fragments/modal-sedes.xhtml">
+                <ui:param name="bean" value="#{detalleNovedades}"/>
+                <ui:param name="modalName" value="modalSedes"/>
+                <ui:param name="componentsUpdate" value="detalleNovQueryForm"/>
+            </ui:include>               
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

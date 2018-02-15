@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ul class="nav navbar-nav">
+
+        <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <pe:gravatar id="userImage"
+                             value="nonexisting"/>
+                <span class="hidden-xs">
+                    <h:outputText value="#{userBean.user.cpusuario.curcnombre}" />
+                </span>
+            </a>
+            <ul class="dropdown-menu">
+                <li class="user-header">                    
+                    <h:panelGrid columns="2" columnClasses="ui-grid-col-3,ui-grid-col-9" styleClass="ui-panelgrid-blank">
+
+                        <h:outputText styleClass="topIcon fa fa-user-circle-o" />
+                        <h:outputText   value="#{userBean.user.cpusuario.curcnombre}"  style="color:#333;" />
+
+                        <h:outputText styleClass="topIcon fa fa-medkit" />
+                        <h:outputText   value="#{userBean.clinica.cclcnombre}"  style="color:#333" />                                
+
+                    </h:panelGrid>
+                </li>
+                <li class="user-footer">
+                    <h:form prependId="false">
+                        <h:panelGrid columns="2" columnClasses="ui-grid-col-9,ui-grid-col-3" styleClass="ui-panelgrid-blank">
+                            <p:commandButton value="Cambiar contraseña" title="Cambiar contraseña" 
+                                             update="@widgetVar(ChangePassword)" oncomplete="PF('ChangePassword').show();" 
+                                             icon="fa fa-refresh" styleClass="btn btn-danger"/>
+                            <p:commandButton value="Salir" title="Salir" action="#{userBean.logout}" icon="fa fa-power-off" />                                            
+                        </h:panelGrid>
+                    </h:form>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+
+
+</ui:composition>

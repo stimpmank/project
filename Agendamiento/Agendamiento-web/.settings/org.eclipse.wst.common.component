@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="agendamiento-web-1.0-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="agendamiento-dto-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/agendamiento-dto/agendamiento-dto">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="CommonStrategyDTO-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CommonStrategyDTO/CommonStrategyDTO">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="agendamiento-service-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/agendamiento-service/agendamiento-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="agendamiento-persist-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/agendamiento-persist/agendamiento-persist">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registro-common-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/registro-common/registro-common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registro-service-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/registro-service/registro-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registro-persist-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/registro-persist/registro-persist">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="clinico-dto-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/clinico-dto/clinico-dto">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="clinico-service-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/clinico-service/clinico-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="clinico-persist-1.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/clinico-persist/clinico-persist">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="agendamiento-web"/>
+        <property name="java-output-path" value="/agendamiento-web/target/classes"/>
+    </wb-module>
+</project-modules>

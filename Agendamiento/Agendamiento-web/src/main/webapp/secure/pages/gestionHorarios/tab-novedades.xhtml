@@ -1,0 +1,312 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:o="http://omnifaces.org/ui"
+             xmlns:adm="http://github.com/adminfaces"
+             xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:form id="gestionHorariosNovedQuery">
+
+        <div class="ui-fluid" >
+
+            <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" styleClass="ui-panelgrid-blank">
+                
+                <h:panelGroup>
+                    <p:outputLabel value="#{bundle.lb_sede_gen}" for="sede_gen" />
+                    <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+                        <p:autoComplete id="sede_gen"
+                                        title="#{bundle.tl_sede}"
+                                        value="#{gestionHorarios.cpclinicaSelect}"
+                                        completeMethod="#{gestionHorarios.autoComplCpclinica}"
+                                        var="item"
+                                        itemValue="#{item}" itemLabel="#{item.cclcnombre}"
+                                        forceSelection="true" dropdown="true" 
+                                        required="true" placeholder="#{bundle.rq_sede}">
+
+                            <o:converter converterId="omnifaces.ListConverter"  list="#{gestionHorarios.cpclinicaDTOList}" />
+
+                            <p:ajax event="itemSelect" process="@this" update="@form" listener="#{gestionHorarios.loadCpprofesioDTOListByCpclinicaQuery}"/> 
+                            <p:ajax event="change" process="@this" update="@form" listener="#{gestionHorarios.loadCpprofesioDTOListByCpclinicaQuery}"/> 
+
+                        </p:autoComplete>
+                        <p:commandButton icon="fa fa-search"
+                                         update="@widgetVar(modalSedesNov)" 
+                                         process="@this" 
+                                         oncomplete="PF('modalSedesNov').show();" 
+                                         actionListener="#{gestionHorarios.clearModalCpclinica}"/>
+                    </p:panelGrid>
+                </h:panelGroup>
+
+                <h:panelGroup>
+                    <p:outputLabel value="#{bundle.lb_profesional_gen}" for="prof_gen" />
+                    <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                        <p:autoComplete id="prof_gen"
+                                        title="#{bundle.tl_profasional}"
+                                        value="#{gestionHorarios.cpprofesioSelect}"
+                                        completeMethod="#{gestionHorarios.autoComplCpprofesio}"
+                                        disabled="#{empty gestionHorarios.cpclinicaSelect}"
+                                        var="item"
+                                        itemValue="#{item}" itemLabel="#{item.cpfcnombre}"
+                                        forceSelection="true" dropdown="true" 
+                                        required="true" placeholder="#{bundle.rq_profasional}">
+
+                            <o:converter converterId="omnifaces.ListConverter"  list="#{gestionHorarios.cpprofesioDTOList}" />
+
+                            <p:ajax event="itemSelect" process="@this" update="@form"/> 
+                            <p:ajax event="change" process="@this" update="@form"/> 
+
+                        </p:autoComplete>
+                        <p:commandButton icon="fa fa-search"
+                                         update="@widgetVar(modalProfesionalesNov)" 
+                                         process="@this" 
+                                         oncomplete="PF('modalProfesionalesNov').show();" 
+                                         actionListener="#{gestionHorarios.clearModalCpprofesio}"/>
+                    </p:panelGrid>
+                </h:panelGroup>
+                
+                <h:panelGroup>
+                    <p:outputLabel value="#{bundle.lb_fech_ini_nov}" for="fechaIniNov" />
+                    <p:calendar navigator="true" yearRange="c-20:c+1"  maxlength="60" id="fechaIniNov" value="#{gestionHorarios.fechaInicioNovedad}" pattern="dd/MM/yyyy" 
+                                title="#{bundle.lb_fech_ini_nov}" required="true" label="#{bundle.lb_fech_ini_nov}">
+                        <p:ajax event="dateSelect" />
+                    </p:calendar>
+                </h:panelGroup>
+
+                <h:panelGroup>
+                    <p:outputLabel value="#{bundle.lb_fech_fin_nov}" for="fechaFinNov" />
+                    <p:calendar navigator="true" yearRange="c-20:c+1"  maxlength="60" id="fechaFinNov" value="#{gestionHorarios.fechaFinNovedad}" pattern="dd/MM/yyyy" 
+                                title="#{bundle.lb_fech_fin_nov}" required="true" label="#{bundle.lb_fech_fin_nov}" >
+                        <p:ajax event="dateSelect" />
+                    </p:calendar>
+                </h:panelGroup>
+            </p:panelGrid>
+
+        </div>
+        <p:spacer/>
+        <div>
+            <p:panel styleClass="ui-button-group">
+                <p:commandButton icon="fa fa-search" 
+                                 value="#{bundle.bt_buscar_gen}" 
+                                 partialSubmit="true"
+                                 actionListener="#{gestionHorarios.consultarNovedades}"
+                                 disabled="#{empty gestionHorarios.cpprofesioSelect or empty gestionHorarios.cpprofesioSelect or empty gestionHorarios.fechaInicioNovedad or empty gestionHorarios.fechaFinNovedad}"
+                                 update="@widgetVar(growl), @form, tabViewPrincipal:gestionHorariosNovedSet, tabViewPrincipal:gestionHorariosNovedSet" 
+                                 process="@this" style="width: 200px"/>
+
+                <p:commandButton icon="fa fa-plus-square" 
+                                 value="#{bundle.bt_crear_nov}" 
+                                 partialSubmit="true"
+                                 rendered="#{not empty gestionHorarios.programacionSelect}"
+                                 update="@widgetVar(growl), @form, tabViewPrincipal:gestionHorariosNovedSet" 
+                                 actionListener="#{gestionHorarios.crearNovedad}"
+                                 process="@this " style="width: 200px"/>
+
+            </p:panel>
+        </div>
+        <p:spacer/>
+        <p:outputPanel id="resultadoConsultaNov" >
+            <p:outputPanel rendered="#{not empty gestionHorarios.novedadDTOList}" >
+                <h3 class="align-left">
+                    Novedades
+                </h3>
+                <div class="ui-fluid">
+                    <!-- se le quito la seleccion-->
+                    <p:dataTable
+                        id="novedadDatalist" value="#{gestionHorarios.novedadDTOList}" var="item"   
+                        selectionMode="single" selection="#{gestionHorarios.novedadSelect}"
+                        rowKey="#{item.id}"
+                        paginator="true"
+                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                        rows="10"
+                        rowsPerPageTemplate="10,50,100"
+                        >
+
+                        <p:ajax event="rowSelect"   process="@this" update="tabViewPrincipal:gestionHorariosNovedSet" listener="#{gestionHorarios.consultarDiasNovedad}" />
+                        <p:ajax event="rowUnselect" process="@this" update="tabViewPrincipal:gestionHorariosNovedSet" />
+
+                        <p:column style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_id_nov}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+
+                        <p:column style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_descripcion_nov}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.descripcion}"/>
+                        </p:column>
+
+                        <p:column style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_fech_ini_nov_tb}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaInicio}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_fech_fin_nov_tb}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fechaFin}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column style="width: 10%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_estado_nov}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.estado == 0 ? bundle.txt_inactivo : bundle.txt_activo}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+
+    </h:form>
+    <h:form id="gestionHorariosNovedSet">
+        <!--panel resultado de consultar las novedades -->
+        <p:outputPanel id="NovedadPanelEdition">
+            <p:outputPanel rendered="#{gestionHorarios.habilitarEditarNovedad}">
+                <h3 class="align-left">
+                    Detalle Novedad
+                </h3>
+                <h:panelGroup >
+                    <div class="ui-fluid" >
+
+                        <p:panelGrid columns="1" columnClasses="cui-grid-col-12" styleClass="ui-panelgrid-blank"    >
+
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3" styleClass="ui-panelgrid-blank">
+
+                                <h:panelGroup>
+                                    <p:outputLabel value="#{bundle.lb_descripcion_nov}" for="descrip_nov_edi" />
+                                    <p:inputText  id="descrip_nov_edi" value="#{gestionHorarios.novedadSelect.descripcion}" required="true"/>
+                                </h:panelGroup>
+
+                                <h:panelGroup>
+                                    <p:outputLabel value="#{bundle.lb_estado_nov}" for="estado_nov_edi" />
+                                    <p:selectBooleanButton id="estado_nov_edi" value="#{gestionHorarios.aux_novedad_estado}" onLabel="#{bundle.txt_activo}" offLabel="#{bundle.txt_inactivo}" />
+                                </h:panelGroup>
+                                
+                                <h:panelGroup>
+                                    <p:outputLabel value="#{bundle.lb_fech_ini_nov_tb}" for="fechaIni_nov_edi" />
+                                    <p:calendar navigator="true" yearRange="c-5:c+5"  maxlength="60" id="fechaIni_nov_edi" value="#{gestionHorarios.novedadSelect.fechaInicio}" pattern="dd/MM/yyyy">
+                                        <p:ajax event="dateSelect" process="@this" />
+                                    </p:calendar>
+                                </h:panelGroup>
+                                
+                                <h:panelGroup>
+                                    <p:outputLabel value="#{bundle.lb_fech_fin_nov_tb}" for="fechaFin_nov_edi" />
+                                    <p:calendar navigator="true" yearRange="c-5:c+5"  maxlength="60" id="fechaFin_nov_edi" value="#{gestionHorarios.novedadSelect.fechaFin}" pattern="dd/MM/yyyy">
+                                        <p:ajax event="dateSelect" process="@this" />
+                                    </p:calendar>
+                                </h:panelGroup>
+
+                            </p:panelGrid>
+
+                        </p:panelGrid>
+
+                    </div>
+                </h:panelGroup>
+
+            </p:outputPanel>
+        </p:outputPanel>
+
+        <p:outputPanel id="diaNovedadPanel">
+            <p:outputPanel rendered="#{gestionHorarios.habilitarVerAgendaNovedad}">
+                <h3 class="align-left">
+                    Agenda
+                </h3>
+
+                <!-- panel resultado de consultar la agenda de una programacion -->
+                <h:panelGroup >
+                    <div class="ui-fluid" >
+
+                        <p:panelGrid columns="2" columnClasses="col-8-custom,col-8-custom-x7" >
+
+                            <h:panelGroup style="width:100%; border: none;">
+                                <div class="ui-fluid" >
+                                    <p:panelGrid columns="1" style="width:100%; border: none;">
+                                        <p:panel header="Dia" style="text-align:center; width:100%; border: none;">
+
+                                            <h:panelGrid columns="1" style="width:100%; border: none;">
+
+                                                <p:inputText readonly="true" style="border:none;" value="#{bundle.lb_habil_nov}" maxlength="10"/>
+                                                <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hi_nov}" maxlength="10"/>
+                                                <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hf_nov}" maxlength="10"/>
+                                                <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_agen_nov}" maxlength="10"/>
+
+                                            </h:panelGrid>
+                                        </p:panel>
+                                    </p:panelGrid>
+                                </div>
+                            </h:panelGroup>
+
+                            <h:panelGroup style="width:100%; border: none;">
+                                <div class="ui-fluid" >
+                                    <p:dataGrid id="diaNovedadDataGrid" 
+                                                var="item" value="#{gestionHorarios.sortedWrapperDiaNovedadDTO}" 
+                                                columns="8" style="width:100%; border: none;">
+                                        <p:panel header="#{gestionHorarios.getNombreDia(item.dia)}" style="text-align:center; width:100%; border: none;">
+
+                                            <h:panelGrid columns="1" style="width:100%; border: none;">
+
+
+                                                <p:selectBooleanButton id="dhabil_#{item.dia}" value="#{item.habil}" onLabel="SI" offLabel="NO" style="width:50px" >
+                                                    <p:ajax update="@widgetVar(hini_#{item.dia}),@widgetVar(hfin_#{item.dia})" process="@this" />
+                                                </p:selectBooleanButton>
+
+                                                <pe:timePicker widgetVar="hini_#{item.dia}" id="hini_#{item.dia}" 
+                                                               value="#{item.habil ? item.horaInicio : null}" 
+                                                               required="#{item.habil}" disabled="#{not item.habil}"
+                                                               mode="popup" startHours="6" endHours="20"  
+                                                               startMinutes="0" endMinutes="55" intervalMinutes="5" >
+                                                    <p:keyFilter regEx="/[]/" />
+                                                </pe:timePicker>
+
+                                                <pe:timePicker widgetVar="hfin_#{item.dia}" id="hfin_#{item.dia}" 
+                                                               value="#{item.habil ? item.horaFin : null}" 
+                                                               required="#{item.habil}" disabled="#{not item.habil}"
+                                                               mode="popup" startHours="6" endHours="20"  
+                                                               startMinutes="0" endMinutes="55" intervalMinutes="5" >
+                                                    <p:keyFilter regEx="/[]/" />
+                                                </pe:timePicker>
+
+                                                <p:selectBooleanButton id="dtiponov_#{item.dia}" value="#{item.tipoNovedad}" onLabel="Apertura" offLabel="Bloqueo" style="width:80px" />
+
+
+                                            </h:panelGrid>
+                                        </p:panel>
+
+                                    </p:dataGrid>
+                                </div>    
+                            </h:panelGroup>
+                        </p:panelGrid>
+
+                    </div>
+                </h:panelGroup>
+
+                <div>
+                    <p:panel styleClass="ui-button-group">
+                        <p:commandButton icon="fa fa-floppy-o" 
+                                         value="#{bundle.bt_guardar}" 
+                                         style="width: 200px"
+                                         update="@form" process="@form" 
+                                         actionListener="#{gestionHorarios.guardarNovedad}" 
+                                         /> 
+                    </p:panel>
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+    </h:form>
+
+</ui:fragment>

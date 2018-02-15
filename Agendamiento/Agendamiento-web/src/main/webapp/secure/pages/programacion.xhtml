@@ -1,0 +1,317 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="false"/>
+    </ui:define>
+
+    <ui:define name="title">
+        <p:panel id="growl" widgetVar="growl" style="border:none; background: transparent; padding: 0; margin: 0">
+            <p:messages autoUpdate="true" globalOnly="true" closable="true" />                
+        </p:panel>
+
+        <h2 class="align-center">
+            Dummy Dashboard
+        </h2>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <h:form id="buscadorProgramacionForm" prependId="false">
+            <p:panel header="#{bundle.header_con_contrato}">
+                <div class="ui-fluid">
+
+                    <p:messages id="messagesBuscadorProgramacionForm" closable="true" severity="error" autoUpdate="true" />
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" styleClass="ui-panelgrid-blank">
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_ocupa}" for="profesional" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                                <p:autoComplete id="profesional"
+                                                title="#{bundle.tl_ocupa}"
+                                                value="#{programacion.profesionalSelect}"
+                                                completeMethod="#{programacion.autoComplProfesionales}"
+                                                var="item"
+                                                itemValue="#{item}" itemLabel="#{item.name}"
+                                                forceSelection="true"
+                                                dropdown="true" 
+                                                placeholder="#{bundle.rq_ocuopa}">
+                                    <o:converter converterId="omnifaces.ListConverter"  list="#{programacion.profesionalesDTOList}" />
+                                    <p:ajax event="itemSelect" process="@this" update="@form"/> 
+                                    <p:ajax event="change" process="@this" update="@form"/> 
+                                </p:autoComplete>
+                                <p:commandButton icon="fa fa-search"
+                                                 update="@widgetVar(modalProfesionales)" process="@this" 
+                                                 oncomplete="PF('modalProfesionales').show();" />
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_ocupa}" for="sede" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+                                <p:autoComplete id="sede"
+                                                title="#{bundle.tl_ocupa}"
+                                                value="#{programacion.sedeSelect}"
+                                                completeMethod="#{programacion.autoComplSedes}"
+                                                var="item"
+                                                itemValue="#{item}" itemLabel="#{item.name}"
+                                                forceSelection="true"
+                                                dropdown="true" 
+                                                placeholder="#{bundle.rq_ocuopa}">
+                                    <o:converter converterId="omnifaces.ListConverter"  list="#{programacion.sedesDTOList}" />
+                                    <p:ajax event="itemSelect" process="@this" update="@form"/> 
+                                    <p:ajax event="change" process="@this" update="@form"/> 
+                                </p:autoComplete>
+                                <p:commandButton icon="fa fa-search"
+                                                 update="@widgetVar(modalSedes)" process="@this" 
+                                                 oncomplete="PF('modalSedes').show();" />
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                    </p:panelGrid>  
+                </div>
+
+                <p:spacer />
+                <p:outputPanel autoUpdate="true" styleClass="ui-button-group">
+                    <p:commandButton icon="fa fa-search" 
+                                     value="#{bundle.bt_consulta_con}" 
+                                     partialSubmit="true"
+                                     actionListener="#{programacion.consultarProgramaciones}"
+                                     disabled="#{empty programacion.profesionalSelect or empty programacion.sedeSelect}"
+                                     update="@widgetVar(growl), @form" 
+                                     process="@this "/>
+                </p:outputPanel>
+
+                <div class="ui-fluid">
+                    <h:panelGroup>
+                        <!-- se le quito la seleccion-->
+                        <p:dataTable
+                            id="programacionDatalist" value="#{programacion.programacionDTOList}" var="item"   
+                            selectionMode="single" selection="#{programacion.programacionSelect}"
+                            rowKey="#{item.id}"
+                            paginator="true"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rows="10"
+                            rowsPerPageTemplate="10,50,100">
+
+                            <p:ajax event="rowSelect"   process="@this" update="diaProgramacionPanel" />
+                            <p:ajax event="rowUnselect" process="@this" update="diaProgramacionPanel" />
+
+                            <p:column style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.lb_contra_tabla}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.id}"/>
+                            </p:column>
+
+                            <p:column style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.lb_fecha_ini}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.fechaInicio}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.lb_fecha_ini}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.fechaFin}">
+                                    <f:convertDateTime pattern="dd-MM-yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column style="width: 10%">
+                                <f:facet name="header">
+                                    <h:outputText value="#{bundle.lb_contra_tabla}"/>
+                                </f:facet>
+                                <h:outputText value="#{item.estado}"/>
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:panelGroup>
+                </div>
+            </p:panel>
+
+
+            <h:panelGroup id="diaProgramacionPanel">
+                <div class="ui-fluid" >
+
+                    <p:panelGrid columns="2" columnClasses="col-8-custom,col-8-custom-x7" 
+                                 rendered="#{not empty programacion.programacionSelect and not empty programacion.programacionSelect.diaProgramacionDTOs}" >
+
+                        <h:panelGroup style="width:100%; border: none;">
+                            <div class="ui-fluid" >
+                                <p:panelGrid columns="1" style="width:100%; border: none;">
+                                    <p:panel header="Dia" style="text-align:center; width:100%; border: none;">
+
+                                        <h:panelGrid columns="1" style="width:100%; border: none;">
+
+                                            <p:inputText readonly="true" style="border:none;" value="#{bundle.lb_habil_gen}" maxlength="10"/>
+                                            <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hil_gen}" maxlength="10"/>
+                                            <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hfl_gen}" maxlength="10"/>
+                                            <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hi_gen}" maxlength="10"/>
+                                            <p:inputText readonly="true" style="border:none;"  value="#{bundle.lb_hf_gen}" maxlength="10"/>
+
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </p:panelGrid>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup style="width:100%; border: none;">
+                            <div class="ui-fluid" >
+                                <p:dataGrid id="diaProgramacionDataGrid" 
+                                            var="item" value="#{programacion.sortedWrapperDiaProgramacionDTO}" 
+                                            columns="8" style="width:100%; border: none;">
+
+                                    <p:panel header="#{item.dia}" style="text-align:center; width:100%; border: none;">
+
+                                        <h:panelGrid columns="1" style="width:100%; border: none;">
+
+                                            <p:selectBooleanButton id="dhabil_#{item.dia}" value="#{item.habil}" onLabel="Yes" offLabel="No" style="width:50px" />
+                                            <pe:timePicker id="hini_#{item.dia}" value="#{item.horaInicio}" mode="popup" startHours="6" endHours="20"  
+                                                           startMinutes="0" endMinutes="55" intervalMinutes="5" >
+                                                <p:keyFilter regEx="/[]/" />
+                                            </pe:timePicker>
+                                            <pe:timePicker id="hfin_#{item.dia}" value="#{item.horaFin}" mode="popup" startHours="6" endHours="20"  
+                                                           startMinutes="0" endMinutes="55" intervalMinutes="5"/>
+                                            <pe:timePicker id="hinia_#{item.dia}" value="#{item.horaInicioAlmuerzo}" mode="popup" startHours="6" endHours="20"  
+                                                           startMinutes="0" endMinutes="55" intervalMinutes="5"/>
+                                            <pe:timePicker id="hfina_#{item.dia}" value="#{item.horaFinAlmuerzo}" mode="popup" startHours="6" endHours="20"  
+                                                           startMinutes="0" endMinutes="55" intervalMinutes="5"/>
+
+                                        </h:panelGrid>
+                                    </p:panel>
+
+                                </p:dataGrid>
+                            </div>    
+                        </h:panelGroup>
+                    </p:panelGrid>
+
+
+
+                </div>
+            </h:panelGroup>
+
+            <p:commandButton actionListener="#{programacion.save}" value="#{bundle.bt_guardar}" 
+                             update="@form" process="@form" icon="fa fa-floppy-o"/>
+
+        </h:form>
+
+        <p:dialog widgetVar="modalProfesionales" header="#{bundle.header_bus_contrato}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <h:form>
+                <div class="ui-fluid" >
+                    <p:messages id="messagesModalProfesional" closable="true" severity="error" />
+                    <p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+                        <p:outputLabel value="#{bundle.lb_codigo_}" for="cod_profesional"></p:outputLabel>
+                        <p:inputText id="cod_profesional" value="#{programacion.profesionalQuery.id}"/>
+
+                        <p:outputLabel value="#{bundle.lb_nombre_}" for="nombre_profesional"/>
+                        <p:inputText id="nombre_profesional" value="#{programacion.profesionalQuery.name}" />
+
+                    </p:panelGrid>
+                </div>
+
+                <p:spacer/>
+                <p:panel styleClass="ui-button-group">
+                    <p:commandButton icon="fa fa-search" value="#{bundle.bt_consulta_con}" actionListener="#{programacion.consultarProfesionalesMock}" update="@widgetVar(growl),@form" oncomplete="PF('modalProfesionales').initPosition();" />
+                    <p:commandButton icon="fa fa-times" value="#{bundle.bt_cerrar_con}" type="button" onclick="PF('modalProfesionales').hide();" />                        
+                </p:panel>
+
+                <div class="ui-fluid" >
+                    <p:dataTable id="profesionalesDatalist" value="#{programacion.profesionalesDTOList}" var="item" scrollable="true"
+                                 selectionMode="single" selection="#{programacion.profesionalSelect}" scrollHeight="230"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}" >
+
+                        <p:ajax event="rowSelect"   update=":buscadorProgramacionForm" oncomplete="PF('modalProfesionales').hide();"/>
+                        <p:ajax event="rowUnselect" update=":buscadorProgramacionForm" oncomplete="PF('modalProfesionales').hide();"/>
+                        <p:ajax event="page" oncomplete="PF('modalProfesionales').initPosition();" />
+
+                        <p:column style="width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_codigo_tabla}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column style="width: 80%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_nombre_tabla}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog widgetVar="modalSedes" header="#{bundle.header_bus_contrato}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <h:form>
+                <div class="ui-fluid" >
+                    <p:messages id="messagesModalSede" closable="true" severity="error" />
+                    <p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+                        <p:outputLabel value="#{bundle.lb_codigo_}" for="cod_sede"></p:outputLabel>
+                        <p:inputText id="cod_sede" value="#{programacion.sedeQuery.id}"/>
+
+                        <p:outputLabel value="#{bundle.lb_nombre_}" for="nombre_sede"/>
+                        <p:inputText id="nombre_sede" value="#{programacion.sedeQuery.name}" />
+
+                    </p:panelGrid>
+                </div>
+
+                <p:spacer/>
+                <p:panel styleClass="ui-button-group">
+                    <p:commandButton icon="fa fa-search" value="#{bundle.bt_consulta_con}" actionListener="#{programacion.consultarSedesMock}" update="@widgetVar(growl),@form" oncomplete="PF('modalSedes').initPosition();" />
+                    <p:commandButton icon="fa fa-times" value="#{bundle.bt_cerrar_con}" type="button" onclick="PF('modalSedes').hide();" />                        
+                </p:panel>
+
+                <div class="ui-fluid" >
+                    <p:dataTable id="sedesDatalist" value="#{programacion.sedesDTOList}" var="item" scrollable="true"
+                                 selectionMode="single" selection="#{programacion.sedeSelect}" scrollHeight="230"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}" >
+
+                        <p:ajax event="rowSelect"   update=":buscadorProgramacionForm" oncomplete="PF('modalSedes').hide();"/>
+                        <p:ajax event="rowUnselect" update=":buscadorProgramacionForm" oncomplete="PF('modalSedes').hide();"/>
+                        <p:ajax event="page" oncomplete="PF('modalSede').initPosition();" />
+
+                        <p:column style="width: 20%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_codigo_tabla}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column style="width: 80%">
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_nombre_tabla}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

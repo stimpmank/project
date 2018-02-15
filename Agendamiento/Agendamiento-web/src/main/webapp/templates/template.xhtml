@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                template="/admin.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="showcase.css"/>
+        <h:outputStylesheet library="css" name="prism.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/apple-touch-icon.png']}"
+              sizes="180x180"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon-32x32.png']}" sizes="32x32"/>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon-16x16.png']}" sizes="16x16"/>
+        <link rel="manifest" href="manifest.json"/>
+        <!-- See https://developers.google.com/web/updates/2014/11/Support-for-theme-color-in-Chrome-39-for-Android -->
+        <meta name="theme-color" content="#444"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <f:loadBundle var="theme" basename="admin-theme"/>
+        <title>AdminFaces Showcase</title>
+        <h:outputStylesheet library="css" name="profamila.css"/>
+        <h:outputScript library="js" name="jsfcrud.js"/>
+    </ui:define>
+
+    <ui:define name="title">
+
+        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" /> 
+
+        <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false" onShow="PF('statusDialog').initPosition();">
+            <p:panelGrid columns="1" styleClass="ui-panelgrid-blank" style="text-align:center;">
+                <h:graphicImage library="img" name="loading.gif" height="50px" width="50px"/>
+                <p:outputLabel value="PROCESANDO" styleClass="topIcon"/>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:panel id="growl" widgetVar="growl" style="border:none; background: transparent; padding: 0; margin: 0">
+            <p:messages autoUpdate="true" globalOnly="true" closable="true" />                
+        </p:panel>
+
+        <ui:insert name="content_header">
+
+        </ui:insert>
+
+    </ui:define>
+
+    <ui:define name="logo-lg">
+        Admin Showcase
+    </ui:define>
+
+    <ui:define name="logo-mini">
+        Admin
+    </ui:define>
+
+    <ui:define name="menu-begin">
+        <ui:include src="/includes/menu-search.xhtml"/>
+    </ui:define>
+
+    <ui:define name="menu">
+        <ui:include src="/includes/menu.xhtml"/>
+    </ui:define>
+
+    <ui:define name="top-menu">
+        <ui:include src="/includes/top-menu.xhtml"/>
+    </ui:define>
+
+    <ui:define name="content-end">
+        <section class="content">
+            <ui:insert name="code"/>
+        </section>
+    </ui:define>
+
+    <ui:define name="footer">
+        <div style="display: inline">            
+            Copyright (C) Profamilia 2018            
+        </div>
+
+        <h:outputScript library="js" name="prism.js" target="head"/>
+        <h:outputScript library="js" name="showcase.js" target="head"/>
+
+        <p:outputPanel autoUpdate="true">
+            <script type="text/javascript">
+                //<![CDATA[
+                // Desactiva el enter en el formulario
+                $(function () {
+                    $('form').on('keypress', function (event) {
+                        if (event.which === 13 && $(event.target).is(':input:not(textarea,:button,:submit,:reset)')) {
+                            event.preventDefault();
+                        }
+                    });
+                });
+
+                if (isMobile()) {
+                    $('a.ui-link').click(function () {
+                        $(this).prop('disabled', true);
+                        showBar();
+                    });
+                }
+
+                /*if ('serviceWorker' in navigator) {
+                 window.addEventListener('load', function() {
+                 navigator.serviceWorker.register('service-worker.js', { scope: '/showcase/' });
+                 });
+                 }*/
+
+                //]]>
+            </script>
+        </p:outputPanel>
+
+        <p:dialog widgetVar="ChangePassword" header="Cambiar contraseña" modal="true" resizable="false" appendTo="@(body)">
+            <h:form>
+                <div class="ui-fluid">
+                    <p:messages id="messagesChangePassword" closable="true" severity="error" />
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Contraseña Actual:" for="pwdActual" ></p:outputLabel>
+                        <p:password id="pwdActual" value="#{userBean.passwd}" label="Contraseña Actual" required="true" />
+                        <p:outputLabel value="Nueva Contraseña:" for="passwdNew"></p:outputLabel>
+                        <p:password id="passwdNew" value="#{userBean.passwdNew}" label="Nueva Contraseña" required="true" match="passwdNewConfirm"/>
+                        <p:outputLabel value="Confirmar Nueva Contraseña:" for="passwdNewConfirm" ></p:outputLabel>
+                        <p:password id="passwdNewConfirm" value="#{userBean.passwdNewConfirm}" label="Confirmar Nueva Contraseña" required="true" />
+                    </p:panelGrid>
+                </div>
+                <p:panel styleClass="ui-button-group">
+                    <p:commandButton value="Cambiar" actionListener="#{userBean.changePasswordListener}" update="@widgetVar(growl),messagesChangePassword,@form" oncomplete="handleSubmit(args,'ChangePassword');"/>
+                    <p:commandButton value="Cerrar" type="button" onclick="PF('ChangePassword').hide();" />                        
+                </p:panel>
+            </h:form>
+        </p:dialog>
+        <o:highlight styleClass="ui-state-error" />
+
+
+    </ui:define>
+
+
+</ui:composition>

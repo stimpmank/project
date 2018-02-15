@@ -1,0 +1,733 @@
+<ui:composition template="/templates/defaultTemplate.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="contenido">
+
+		<h:form id="registroActividadesForm">
+			<p:fieldset legend="#{bundle.header_actividades}">
+				<div class="ui-fluid">
+					<p:growl id="growl" showDetail="true" sticky="true" />
+					<p:panel id="datosActiv" widgetVar="panel0"
+						header="#{bundle.header_actividad}">
+						<p:panelGrid columns="4" layout="grid"
+							columnClasses="ui-grid-col-3,ui-grid-col-3,ui-grid-col-3,ui-grid-col-3"
+							styleClass="ui-panelgrid-blank">
+							<h:panelGroup>
+								<p:outputLabel value="#{bundle.lb_fecha_actividad}"
+									for="fechaActividad" />
+								<p:calendar id="fechaActividad"
+									value="#{registroActividad.fechaActividad}" showOn="button"
+									required="true" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Eje Temático" for="ejeTe" />
+								<p:selectOneMenu id="ejeTe"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.tematico}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="DSR y SSR" itemValue="DS" />
+									<f:selectItem itemLabel="Aborto" itemValue="AB" />
+									<f:selectItem itemLabel="VBG" itemValue="VB" />
+									<f:selectItem itemLabel="PESCC" itemValue="PE" />
+									<f:selectItem itemLabel="Servicios Amigables" itemValue="SA" />
+									<f:selectItem itemLabel="Discapacidad y DSR" itemValue="DD" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup columns="1" style="margin-bottom: 10px">
+								<p:outputLabel value="Nombre de la Actividad"
+									for="actividadNombre" />
+								<p:inputText id="actividadNombre" required="true"
+									value="#{registroActividad.actividadNombre}" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Tipo Actividad" for="typeAc" />
+								<p:selectOneMenu id="typeAc"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.actividad}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Proceso Formativo" itemValue="PF" />
+									<f:selectItem itemLabel="Asistencia Técnica" itemValue="AS" />
+									<f:selectItem itemLabel="Mesa de Trabajo" itemValue="MT" />
+									<f:selectItem itemLabel="Movilizacion Social" itemValue="MS" />
+									<f:selectItem itemLabel="Foro/Seminario" itemValue="FS" />
+									<f:selectItem itemLabel="Feria de Sexualidad" itemValue="SF" />
+									<f:selectItem itemLabel="Formacion para el Trabajo"
+										itemValue="FT" />
+									<f:selectItem itemLabel="Diplomados" itemValue="DI" />
+									<f:selectItem
+										itemLabel="Entrenamiento en técnica médicas y quirúrgicas"
+										itemValue="EQ" />
+
+
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup columns="1" style="margin-bottom: 10px">
+								<p:outputLabel value="Intensidad en Horas" for="intensidad" />
+								<p:inputText id="intensidad"
+									value="#{registroActividad.intensidad}" />
+								<p:slider for="intensidad" />
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Modalidad" for="modali" />
+								<p:selectOneButton id="modali"
+									value="#{registroActividad.modalidad}"
+									style="font-size: 0.7em;"
+									converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="Presencial" itemValue="PR" />
+									<f:selectItem itemLabel="Virtual" itemValue="VI" />
+								</p:selectOneButton>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:outputLabel value="Línea de Acción o Proceso" for="typeLi" />
+								<p:selectOneMenu id="typeLi"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.lineaaccion}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Salud" itemValue="SA" />
+									<f:selectItem itemLabel="Farma" itemValue="FA" />
+									<f:selectItem itemLabel="Investigaciones" itemValue="IV" />
+									<f:selectItem itemLabel="Educa" itemValue="ED" />
+									<f:selectItem itemLabel="Incidencia" itemValue="IN" />
+									<f:selectItem itemLabel="Jovenes" itemValue="JO" />
+									<f:selectItem itemLabel="Mercadeo" itemValue="ME" />
+									<f:selectItem itemLabel="Comunicaciones" itemValue="CO" />
+									<f:selectItem itemLabel="Otro" itemValue="OT" />
+
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+
+							<h:panelGroup>
+								<p:outputLabel value="Población" for="typePo" />
+								<p:selectOneMenu id="typePo"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.poblacion}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Docentes" itemValue="DO" />
+									<f:selectItem itemLabel="Padres/Madres" itemValue="PM" />
+									<f:selectItem itemLabel="Estudiantes" itemValue="ES" />
+									<f:selectItem itemLabel="Líderes" itemValue="LI" />
+									<f:selectItem itemLabel="Profesionales" itemValue="PR" />
+									<f:selectItem itemLabel="Periodistas" itemValue="PE" />
+									<f:selectItem itemLabel="Funcionarios Profamilia"
+										itemValue="FP" />
+									<f:selectItem itemLabel="Comunidad" itemValue="CO" />
+									<f:selectItem itemLabel="Otro" itemValue="OT" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:outputLabel value="Sitio" for="typeSi" />
+								<p:selectOneMenu id="typeSi"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.sitio}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Institución pública" itemValue="IU" />
+									<f:selectItem itemLabel="Institución privada" itemValue="II" />
+									<f:selectItem itemLabel="ONG" itemValue="ON" />
+									<f:selectItem itemLabel="IPS" itemValue="IP" />
+									<f:selectItem itemLabel="Institución educativa Ed. Básica"
+										itemValue="IB" />
+									<f:selectItem itemLabel="Institución educativa Ed. Superior"
+										itemValue="IS" />
+									<f:selectItem itemLabel="Empresas" itemValue="EM" />
+									<f:selectItem itemLabel="Centros comunitarios" itemValue="CC" />
+									<f:selectItem itemLabel="Profamilia " itemValue="PR" />
+									<f:selectItem itemLabel="Iglesias" itemValue="IG" />
+									<f:selectItem itemLabel="Otro" itemValue="OT" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Zona" />
+								<p:selectOneButton id="zona" value="#{registroActividad.zona}"
+									style="font-size: 0.7em;"
+									converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="Urbana" itemValue="UR" />
+									<f:selectItem itemLabel="Rural" itemValue="RU" />
+								</p:selectOneButton>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="Clinica" for="clinica" />
+								<p:selectOneMenu id="clinica"
+									value="#{registroActividad.proClinica}" required="true">
+									<f:selectItems value="#{registroActividad.listClinica}"
+										var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:outputLabel value="Sitio" for="sitio" />
+								<p:selectOneMenu id="sitio"
+									converter="omnifaces.SelectItemsConverter" required="true"
+									value="#{registroActividad.sitio}">
+									<f:selectItem itemLabel="Seleccione una opción..." itemValue="" />
+									<f:selectItem itemLabel="Institución pública" itemValue="IU" />
+									<f:selectItem itemLabel="Institución privada" itemValue="II" />
+									<f:selectItem itemLabel="ONG" itemValue="ON" />
+									<f:selectItem itemLabel="IPS" itemValue="IP" />
+									<f:selectItem itemLabel="Institución educativa Ed. Básica"
+										itemValue="IB" />
+									<f:selectItem itemLabel="Institución educativa Ed. Superior"
+										itemValue="IS" />
+									<f:selectItem itemLabel="Empresas" itemValue="EM" />
+									<f:selectItem itemLabel="Centros comunitarios" itemValue="CC" />
+									<f:selectItem itemLabel="Profamilia " itemValue="PR" />
+									<f:selectItem itemLabel="Iglesias" itemValue="IG" />
+									<f:selectItem itemLabel="Otro" itemValue="OT" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<p:outputLabel value="#{bundle.lb_depart}" for="department" />
+								<p:selectOneMenu id="department"
+									value="#{registroActividad.departamento}"
+									title="#{bundle.lb_depart}" required="true"
+									label="#{bundle.lb_depart}"
+									converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+									<f:selectItems value="#{registroActividad.listDepartamentos}"
+										var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+									<p:ajax update="ciuda"
+										listener="#{registroActividad.onchageDepatamento}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:outputLabel value="#{bundle.lb_muni}" for="ciuda" />
+								<p:selectOneMenu
+									disabled="#{empty registroActividad.listMunicipio}" id="ciuda"
+									value="#{registroActividad.ciudad}" title="#{bundle.lb_muni}"
+									required="true" label="#{bundle.lb_muni}"
+									converter="omnifaces.SelectItemsConverter">
+									<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+									<f:selectItems value="#{registroActividad.listMunicipios}"
+										var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+								</p:selectOneMenu>
+							</h:panelGroup>
+							<h:panelGroup>
+								<p:outputLabel value="Vulnerabilidad" for="typeVu" />
+								<p:selectManyCheckbox id="typeVu" layout="pageDirection"
+									columns="3" converter="omnifaces.SelectItemsConverter"
+									required="true" value="#{registroActividad.vulnerabilidad}">
+									<f:selectItem itemLabel="Habitantes de Calle" itemValue="HC" />
+									<f:selectItem itemLabel="Población infantil a cargo ICBF"
+										itemValue="PI" />
+									<f:selectItem itemLabel="Madres comunitarias" itemValue="MC" />
+									<f:selectItem itemLabel="Personas con Discapacidad"
+										itemValue="PD" />
+									<f:selectItem itemLabel="Desmovilidados" itemValue="DM" />
+									<f:selectItem
+										itemLabel="Personas afectados por el conflicto armado"
+										itemValue="PA" />
+									<f:selectItem itemLabel="Trabajadores sexuales" itemValue="TS" />
+									<f:selectItem itemLabel="Personas privadas de la libertad"
+										itemValue="PL" />
+									<f:selectItem itemLabel="Inmigrantes " itemValue="IN" />
+									<f:selectItem itemLabel="Otro" itemValue="OT" />
+								</p:selectManyCheckbox>
+							</h:panelGroup>
+						</p:panelGrid>
+
+						<p:panel styleClass="ui-button-group">
+							<p:commandButton style="width: 200px;" icon="fa fa-floppy-o"
+								value="Guardar y Agregar participantes"
+								actionListener="#{registroActividad.guardarActividad}"
+								update="@widgetVar(growl),@form" />
+
+						</p:panel>
+					</p:panel>
+
+					<p:outputPanel id="panels" layout="none">
+						<h:form id="formExport">
+							<div class="ui-fluid">
+
+								<p:panel header="Registro de Actividades"
+									rendered="#{registroActividad.showPanels}">
+									<p:dataTable id="eventsDT" var="registro"
+										value="#{registroActividad.lstChregistro}"
+										selectionMode="single"
+										selection="#{registroActividad.chregistro}" paginator="true"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+										rowKey="#{registro.hcrlnumero}" rows="10"
+										rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}"
+										emptyMessage="No existen registros">
+										<p:ajax event="rowSelect"
+											listener="#{registroActividad.onRowSelect}"
+											oncomplete="PF('modalRegistroUsuario').show();" />
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Fecha de Actividad" />
+											</f:facet>
+											<h:outputText />
+											<p:calendar value="#{registro.hcrdfechactiv}"
+												pattern="dd/MM/yyyy" disabled="true" />
+										</p:column>
+
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Departamento" />
+											</f:facet>
+											<p:selectOneMenu value="#{registro.hcrcdepartame}"
+												disabled="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItems
+													value="#{registroActividad.listDepartamentos}" var="ref"
+													itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Fecha de Registro" />
+											</f:facet>
+
+											<p:calendar value="#{registro.hcrdfechregist}"
+												pattern="dd/MM/yyyy" disabled="true" />
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Tipo Actividad" />
+											</f:facet>
+											<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+												disabled="true" value="#{registro.hcrctipoactivi}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Proceso Formativo" itemValue="PF" />
+												<f:selectItem itemLabel="Asistencia Técnica" itemValue="AS" />
+												<f:selectItem itemLabel="Mesa de Trabajo" itemValue="MT" />
+												<f:selectItem itemLabel="Movilizacion Social" itemValue="MS" />
+												<f:selectItem itemLabel="Foro/Seminario" itemValue="FS" />
+												<f:selectItem itemLabel="Feria de Sexualidad" itemValue="SF" />
+												<f:selectItem itemLabel="Formacion para el Trabajo"
+													itemValue="FT" />
+												<f:selectItem itemLabel="Diplomados" itemValue="DI" />
+												<f:selectItem
+													itemLabel="Entrenamiento en técnica médicas y quirúrgicas"
+													itemValue="EQ" />
+											</p:selectOneMenu>
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Intensidad en Horas" />
+											</f:facet>
+											<h:outputText value="#{registro.hcrnintenhoras}" />
+										</p:column>
+
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Modalidad" />
+											</f:facet>
+											<p:selectOneMenu value="#{registroActividad.modalidad}"
+												disabled="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Presencial" itemValue="PR" />
+												<f:selectItem itemLabel="Virtual" itemValue="VI" />
+											</p:selectOneMenu>
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Linea Acción" />
+											</f:facet>
+											<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+												disabled="true" value="#{registro.hcrclineaccion}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Salud" itemValue="SA" />
+												<f:selectItem itemLabel="Farma" itemValue="FA" />
+												<f:selectItem itemLabel="Investigaciones" itemValue="IV" />
+												<f:selectItem itemLabel="Educa" itemValue="ED" />
+												<f:selectItem itemLabel="Incidencia" itemValue="IN" />
+												<f:selectItem itemLabel="Jovenes" itemValue="JO" />
+												<f:selectItem itemLabel="Mercadeo" itemValue="ME" />
+												<f:selectItem itemLabel="Comunicaciones" itemValue="CO" />
+
+
+											</p:selectOneMenu>
+										</p:column>
+
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Población" />
+											</f:facet>
+											<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+												disabled="true" value="#{registro.hcrcpoblacion}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Docentes" itemValue="DO" />
+												<f:selectItem itemLabel="Padres/Madres" itemValue="PM" />
+												<f:selectItem itemLabel="Estudiantes" itemValue="ES" />
+												<f:selectItem itemLabel="Líderes" itemValue="LI" />
+												<f:selectItem itemLabel="Profesionales" itemValue="PR" />
+												<f:selectItem itemLabel="Periodistas" itemValue="PE" />
+												<f:selectItem itemLabel="Funcionarios Profamilia"
+													itemValue="FP" />
+												<f:selectItem itemLabel="Comunidad" itemValue="CO" />
+
+											</p:selectOneMenu>
+										</p:column>
+
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Vulnerabilidad" />
+											</f:facet>
+											<p:selectOneMenu converter="omnifaces.SelectItemsConverter"
+												disabled="true" value="#{registro.hcrcvulnerabil}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Habitantes de Calle" itemValue="HC" />
+												<f:selectItem itemLabel="Población infantil a cargo ICBF"
+													itemValue="PI" />
+												<f:selectItem itemLabel="Madres comunitarias" itemValue="MC" />
+												<f:selectItem itemLabel="Discapacitados" itemValue="DI" />
+												<f:selectItem itemLabel="Desmovilidados" itemValue="DM" />
+												<f:selectItem itemLabel="Desplazados" itemValue="DP" />
+												<f:selectItem itemLabel="Trabajadores sexuales"
+													itemValue="TS" />
+												<f:selectItem itemLabel="Personas privadas de la libertad"
+													itemValue="PL" />
+												<f:selectItem itemLabel="Inmigrantes " itemValue="IN" />
+
+											</p:selectOneMenu>
+										</p:column>
+
+									</p:dataTable>
+								</p:panel>
+							</div>
+
+
+						</h:form>
+					</p:outputPanel>
+					<p:dialog widgetVar="modalRegistroUsuario"
+						header="Registro de Usuarios Actividades" modal="true"
+						resizable="false" appendTo="@(body)" width="1100">
+						<p:ajax event="close" update="registroActividadesForm"
+							listener="#{registroActividad.resetDatosUsuario}" />
+						<h:form id="registroUsuarioForm">
+							<div class="ui-fluid">
+								<p:growl id="growl" showDetail="true" sticky="true" />
+								<p:panel id="datosUsuario" widgetVar="panel1">
+									<p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_tipo_iden}" for="identi" />
+											<p:selectOneMenu id="identi"
+												value="#{registroActividad.chusuarioreg.hcuetipoiden}"
+												required="true" label="#{bundle.lb_tipo_iden}"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems
+													value="#{registroActividad.listTipoIdentificacion}"
+													var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+
+										<h:panelGroup>
+
+											<p:outputLabel value="#{bundle.lb_num_iden}" for="numId" />
+											<p:panelGrid columns="2"
+												columnClasses="aux-force-padding-1px ui-grid-col-10,aux-force-padding-1px ui-grid-col-2">
+												<p:inputText id="numId"
+													value="#{registroActividad.chusuarioreg.hcuanumeiden}"
+													title="#{bundle.lb_num_iden}" required="true"
+													label="#{bundle.lb_num_iden}">
+													<o:validator validatorId="cadena.stringValidator" />
+
+												</p:inputText>
+												<p:commandButton icon="fa fa-search" id="consulUsuario"
+													partialSubmit="true" class="ui-button-icon-only"
+													actionListener="#{registroActividad.consultaUsuario}"
+													update="@form,@widgetVar(growl)"
+													process="@this,identi,numId" />
+											</p:panelGrid>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_pri_nom}" for="firstName" />
+											<p:inputText maxlength="50" id="firstName"
+												value="#{registroActividad.chusuarioreg.hcucprimernomb}"
+												title="#{bundle.lb_pri_nom}" required="true"
+												label="#{bundle.lb_pri_nom}">
+												<f:validator validatorId="cadena.stringValidator" />
+											</p:inputText>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_seg_nom}" for="secondName" />
+											<p:inputText maxlength="50" id="secondName"
+												value="#{registroActividad.chusuarioreg.hcucsegundnomb}"
+												title="#{bundle.lb_seg_nom}" label="#{bundle.lb_seg_nom}">
+												<f:validator validatorId="cadena.stringValidator" />
+											</p:inputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_pri_ape}" for="lastName" />
+											<p:inputText maxlength="50" id="lastName"
+												value="#{registroActividad.chusuarioreg.hcucprimerapel}"
+												title="#{bundle.lb_pri_ape}" required="true"
+												label="#{bundle.lb_pri_ape}">
+												<f:validator validatorId="cadena.stringValidator" />
+											</p:inputText>
+										</h:panelGroup>
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_seg_ape}" for="surName" />
+											<p:inputText maxlength="50" id="surName"
+												value="#{registroActividad.chusuarioreg.hcucsegundapel}"
+												title="#{bundle.lb_seg_ape}" label="#{bundle.lb_seg_ape}">
+												<f:validator validatorId="cadena.stringValidator" />
+											</p:inputText>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Sexo" for="sexo" />
+											<p:selectOneMenu id="sexo"
+												converter="omnifaces.SelectItemsConverter"
+												value="#{registroActividad.chusuarioreg.hcuesexo}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Hombre" itemValue="H" />
+												<f:selectItem itemLabel="Mujer" itemValue="M" />
+												<f:selectItem itemLabel="Intersexual" itemValue="I" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Orientacion Sexual" for="orientacion" />
+											<p:selectOneMenu id="orientacion"
+												converter="omnifaces.SelectItemsConverter"
+												value="#{registroActividad.chusuarioreg.hcueorientsexu}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Heterosexual" itemValue="HE" />
+												<f:selectItem itemLabel="Homosexual" itemValue="HO" />
+												<f:selectItem itemLabel="Bisexual" itemValue="BI" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Identidad de Género" for="genero" />
+											<p:selectOneMenu id="genero"
+												converter="omnifaces.SelectItemsConverter" required="true"
+												value="#{registroActividad.chusuarioreg.hcueindetigener}">
+												<f:selectItem itemLabel="Seleccione una opción..."
+													itemValue="" />
+												<f:selectItem itemLabel="Femenino" itemValue="F" />
+												<f:selectItem itemLabel="Masculino" itemValue="M" />
+												<f:selectItem itemLabel="Trans" itemValue="T" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_edad}" for="edad" />
+											<p:inputText maxlength="50" id="edad"
+												value="#{registroActividad.chusuarioreg.hcunedad}"
+												title="#{bundle.lb_edad}" />
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_edu}" for="education" />
+											<p:selectOneMenu id="education"
+												value="#{registroActividad.chusuarioreg.hcunniveledu}"
+												required="true" label="#{bundle.lb_edu}"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems
+													value="#{registroActividad.lstNivelEducativo}" var="ref"
+													itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Asistencia Escolar" />
+											<p:selectOneButton id="asistencia"
+												value="#{registroActividad.chusuarioreg.hcueasistenesco}"
+												style="font-size: 0.7em;" required="true"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Asiste" itemValue="A" />
+												<f:selectItem itemLabel="No Asiste" itemValue="N" />
+											</p:selectOneButton>
+										</h:panelGroup>
+
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_est_civ}" for="estadocivil" />
+											<p:selectOneMenu id="estadocivil"
+												value="#{registroActividad.chusuarioreg.hcueestadcivil}"
+												required="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems value="#{registroActividad.listEstadoCivil}"
+													var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_etnia}" for="etnia" />
+											<p:selectOneMenu id="etnia"
+												value="#{registroActividad.chusuarioreg.hcucetnia}"
+												required="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems value="#{registroActividad.lstEtnia}"
+													var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_vulnerabilidad}"
+												for="vulnera" />
+											<p:selectOneMenu id="vulnera"
+												value="#{registroActividad.chusuarioreg.hcucvulnerabili}"
+												required="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue="" />
+												<f:selectItem itemLabel="Habitantes de Calle" itemValue="HC" />
+												<f:selectItem itemLabel="Población infantil a cargo ICBF"
+													itemValue="PI" />
+												<f:selectItem itemLabel="Madres comunitarias" itemValue="MC" />
+												<f:selectItem itemLabel="Discapacitados" itemValue="DI" />
+												<f:selectItem itemLabel="Desmovilidados" itemValue="DM" />
+												<f:selectItem itemLabel="Desplazados" itemValue="DP" />
+												<f:selectItem itemLabel="Trabajadores sexuales"
+													itemValue="TS" />
+												<f:selectItem itemLabel="Personas privadas de la libertad"
+													itemValue="PL" />
+												<f:selectItem itemLabel="Inmigrantes " itemValue="IN" />
+												<f:selectItem itemLabel="Otro" itemValue="OT" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_email}" for="email" />
+											<p:inputText maxlength="50" id="email"
+												value="#{registroActividad.chusuarioreg.hcuccorreoelec}"
+												title="#{bundle.lb_email}" label="#{bundle.lb_email}">
+											</p:inputText>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="Discapacidad" for="discapa" />
+											<p:selectManyCheckbox id="discapa" layout="pageDirection"
+												columns="3" value="#{registroActividad.discapacidad}"
+												required="true" converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Fisica" itemValue="FI" />
+												<f:selectItem itemLabel="Psicosocial/Mental" itemValue="PM" />
+												<f:selectItem itemLabel="Intelectual" itemValue="IN" />
+												<f:selectItem itemLabel="Sensorial" itemValue="SE" />
+												<f:selectItem itemLabel="Múltiple" itemValue="MU" />
+												<f:selectItem itemLabel="Ninguna" itemValue="NI" />
+											</p:selectManyCheckbox>
+										</h:panelGroup>
+
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_depart}" for="departamento" />
+											<p:selectOneMenu id="departamento"
+												value="#{registroActividad.chusuarioreg.hcundepartame}"
+												title="#{bundle.lb_depart}" required="true"
+												label="#{bundle.lb_depart}"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems
+													value="#{registroActividad.listDepartamentos}" var="ref"
+													itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+												<p:ajax update="ciudad"
+													listener="#{registroActividad.onchageDepatamentos}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_muni}" for="ciudad" />
+											<p:selectOneMenu
+												disabled="#{empty registroActividad.listMunicipios}"
+												id="ciudad"
+												value="#{registroActividad.chusuarioreg.hcunciudad}"
+												title="#{bundle.lb_muni}" required="true"
+												label="#{bundle.lb_muni}"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+												<f:selectItems value="#{registroActividad.listMunicipios}"
+													var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}" />
+											</p:selectOneMenu>
+										</h:panelGroup>
+
+										<h:panelGroup>
+											<p:outputLabel value="#{bundle.lb_movil}" for="movil" />
+											<p:inputText maxlength="50" id="movil"
+												value="#{registroActividad.chusuarioreg.hcuccelular}"
+												title="#{bundle.lb_movil}" label="#{bundle.lb_movil}"
+												validatorMessage="#{bundle.lb_movil}: Error de validación: Solo se permiten numeros">
+												<f:validator validatorId="cadena.stringValidator" />
+												<f:validateRegex pattern="^([\d]+)?$" />
+											</p:inputText>
+										</h:panelGroup>
+									</p:panelGrid>
+								</p:panel>
+								<p:panel styleClass="ui-button-group">
+									<p:commandButton style="width: 200px" icon="fa fa-floppy-o"
+										value="Guardar y Agregar"
+										action="#{registroActividad.guardarUsuarioxActividad}"
+										update="@widgetVar(growl),registroUsuarioForm"
+										process="registroUsuarioForm" />
+
+									<p:commandButton style="width: 200px" icon="fa fa-floppy-o"
+										value="Guardar y Cerrar"
+										action="#{registroActividad.guardarUsuarioxActividad2}"
+										update="registroActividadesForm" process="registroUsuarioForm" />
+
+								</p:panel>
+							</div>
+							<p:outputPanel id="panels" layout="none">
+								<h:form>
+									<div class="ui-fluid">
+										<p:panel header="Usuarios Registrados"
+											rendered="#{registroActividad.showPanelUsuario}">
+											<p:dataTable id="usuariosDT" var="usuario"
+												value="#{registroActividad.lstChusuarioreg}"
+												paginator="true"
+												paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+												rowKey="#{usuario.hculnumero}" rows="10"
+												rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}"
+												emptyMessage="No existen registros">
+												<p:column headerText="Tipo de Identificación">
+													<h:outputText value="#{usuario.hcuetipoiden}" />
+												</p:column>
+												<p:column headerText="Numero de Documento">
+													<h:outputText value="#{usuario.hcuanumeiden}" />
+												</p:column>
+												<p:column headerText="Nombres y Apellidos">
+													<h:outputText
+														value="#{usuario.hcucprimerapel} #{usuario.hcucsegundapel} #{usuario.hcucprimernomb} #{usuario.hcucsegundapel}" />
+												</p:column>
+												<p:column headerText="Correo">
+													<h:outputText value="#{usuario.hcuccorreoelec}" />
+												</p:column>
+												<p:column headerText="Celular">
+													<h:outputText value="#{usuario.hcuccelular}" />
+												</p:column>
+												<p:column headerText="Edad">
+													<h:outputText value="#{usuario.hcunedad}" />
+												</p:column>
+
+											</p:dataTable>
+										</p:panel>
+									</div>
+								</h:form>
+							</p:outputPanel>
+
+						</h:form>
+					</p:dialog>
+
+				</div>
+			</p:fieldset>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

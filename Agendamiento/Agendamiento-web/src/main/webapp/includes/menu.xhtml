@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <style type="text/css">
+
+        @-moz-document url-prefix() {
+            li span.label-danger {
+                margin-top: -20px;
+            }
+        }
+    </style>
+
+    <ul class="sidebar-menu">
+
+        <p:repeat value="#{sessionMenuBean.model.elements}" var="menuelement">
+
+            <li class="header">
+                <p:outputLabel value="#{sessionMenuBean.parseDefaultSubMenu(menuelement).label}"/>
+            </li>
+
+            <p:repeat value="#{sessionMenuBean.parseDefaultSubMenu(menuelement).elements}" var="menue">
+                <li>
+                    <p:link href="#{sessionMenuBean.parseDefaultMenuItem(menue).url}">
+                        <span>
+                            <p:outputLabel value="#{sessionMenuBean.parseDefaultMenuItem(menue).value}"/>
+                        </span>
+                    </p:link>
+                </li>
+            </p:repeat>
+
+        </p:repeat>
+
+    </ul>
+
+    <script type="text/javascript">
+        if (isMobile()) {
+            $('ul.sidebar-menu a.ui-link').click(function () {
+                $(this).prop('disabled', true);
+                showBar();
+            })
+        }
+    </script>
+
+</ui:composition>

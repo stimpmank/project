@@ -1,0 +1,64 @@
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:o="http://omnifaces.org/ui"
+             xmlns:adm="http://github.com/adminfaces"
+             xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <!-- Inicio Modales Profesionales -->
+    <h:form>
+        <div class="ui-fluid" >
+            <p:messages id="messagesModalProfesional" closable="true" severity="error" />
+            <p:panelGrid columns="4" styleClass="ui-panelgrid-blank">
+
+                <p:outputLabel value="#{bundle.lb_codigo_}" for="cod_profesional"></p:outputLabel>
+                <p:inputNumber id="cod_profesional" value="#{bean.cpprofesioQuery.id.cpfncodigo}" decimalPlaces="0" decimalSeparator="" thousandSeparator=""/>
+
+                <p:outputLabel value="#{bundle.lb_nombre_}" for="nombre_profesional"/>
+                <p:inputText id="nombre_profesional" value="#{bean.cpprofesioQuery.cpfcnombre}" />
+
+            </p:panelGrid>
+        </div>
+        |
+        <p:spacer/>
+        <p:panel styleClass="ui-button-group">
+            <p:commandButton icon="fa fa-search" 
+                             value="#{bundle.bt_consultar_mod}" actionListener="#{bean.loadCpprofesioDTOListByCpclinicaQuery}" 
+                             process="@form"
+                             update="@widgetVar(growl),@form" 
+                             oncomplete="PF('#{modalName}').initPosition();" />
+            <p:commandButton icon="fa fa-times" value="#{bundle.bt_cerrar_gen}" type="button" onclick="PF('#{modalName}').hide();" />                        
+        </p:panel>
+
+        <div class="ui-fluid" >
+            <p:dataTable id="profesionalesDatalist" value="#{bean.cpprofesioDTOList}" var="item" scrollable="true"
+                         selectionMode="single" selection="#{bean.cpprofesioSelect}" scrollHeight="230"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowKey="#{item.id.cpfncodigo}"
+                         rows="10"
+                         rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}" >
+
+                <p:ajax event="rowSelect" update="#{componentsUpdate}" oncomplete="PF('#{modalName}').hide();"/>
+                <p:ajax event="rowUnselect" update="#{componentsUpdate}" oncomplete="PF('#{modalName}').hide();"/>
+                <p:ajax event="page" oncomplete="PF('#{modalName}').initPosition();" />
+
+                <p:column style="width: 20%">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.lb_codigo_tabla}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.id.cpfncodigo}"/>
+                </p:column>
+                <p:column style="width: 80%">
+                    <f:facet name="header">
+                        <h:outputText value="#{bundle.lb_nombre_tabla}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.cpfcnombre}"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+
+</ui:fragment>

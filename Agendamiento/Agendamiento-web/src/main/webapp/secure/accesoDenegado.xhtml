@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <ui:param name="renderBreadCrumb" value="false"/>
+    </ui:define>
+
+    <ui:define name="title">
+
+        <h2 class="align-center">
+            No tienes permisos para acceder al recurso solicitado
+            <br/>
+            <small>Consulte con el administrador del sistema para verificar el estado de su cuenta.</small>
+        </h2>
+    </ui:define>
+
+    <ui:define name="body">
+        <a href="/principal" >Volver a la pagina de inicio</a>
+    </ui:define>
+
+</ui:composition>

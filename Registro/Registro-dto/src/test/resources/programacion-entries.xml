@@ -1,0 +1,15 @@
+<dataset>
+    <programacion ID="2"
+           FECHA_INICIO="2018-01-01"
+           FECHA_FIN="2018-12-31"
+           ESTADO="1"
+           ID_PROFESIONAL="2"
+           ID_SEDE="2"/>
+    
+    <programacion ID="3"
+           FECHA_INICIO="2018-01-01"
+           FECHA_FIN="2018-12-31"
+           ESTADO="1"
+           ID_PROFESIONAL="3"
+           ID_SEDE="3"/>
+</dataset>

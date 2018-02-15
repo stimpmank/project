@@ -1,0 +1,273 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/templates/template.xhtml">
+
+    <ui:define name="content_header">
+        <h2 class="align-center">
+            #{bundle.lb_title_cons_user}
+        </h2>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <p:panel header="*Agendamiento" id="pprincipal" >            
+            <div class="ui-fluid" >
+
+                <h:form id="ConsultarAgenda">
+
+                    <p:panelGrid columns="2" columnClasses="ui-grid-col-6,ui-grid-col-6" styleClass="ui-panelgrid-blank">
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_tipo_iden}" for="typeId" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+                                <p:selectOneMenu id="typeId"                                      
+                                                 required="true" 
+                                                 label="#{bundle.lb_tipo_iden}"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 value="#{agendamiento.usuarioSAP.husetipoiden}" >
+                                    <f:selectItem itemLabel="Seleccione Uno" itemValue=""></f:selectItem>
+                                    <f:selectItems value="#{agendamiento.listTipoIdentificacion}" var="ref" itemLabel="#{ref.label}" itemValue="#{ref.value}"/>                        
+                                </p:selectOneMenu>
+
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <p:outputLabel value="#{bundle.lb_num_iden}" for="numId" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                                <p:inputText id="numId" value="#{agendamiento.usuarioSAP.husanumeiden}" title="#{bundle.lb_num_iden}" 
+                                             required="true" label="#{bundle.lb_num_iden}">
+                                    <o:validator validatorId="cadena.stringValidator" />
+                                </p:inputText>
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="false">
+                            <p:outputLabel value="#{bundle.lb_nombre}" for="nombres" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                                <p:inputText id="nombres" value="#{agendamiento.usuarioSAP.huscprimernomb}" title="#{bundle.lb_nombre}" 
+                                             required="false" label="#{bundle.lb_nombre}">
+                                </p:inputText>
+
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="false">
+                            <p:outputLabel value="#{bundle.lb_apellido}" for="apellidos" />
+                            <p:panelGrid columns="2" columnClasses="aux-force-padding-1px ui-grid-col-11,aux-force-padding-1px ui-grid-col-1" >
+
+                                <p:inputText id="apellidos" value="#{agendamiento.usuarioSAP.huscprimerapel}" title="#{bundle.lb_apellido}" 
+                                             required="false" label="#{bundle.lb_apellido}">
+                                </p:inputText>
+                            </p:panelGrid>
+                        </h:panelGroup>
+
+                    </p:panelGrid>
+
+
+                    <p:spacer/>
+                    <div>
+                        <p:panel styleClass="ui-button-group">
+                            <p:commandButton icon="fa fa-search" 
+                                             value="#{bundle.bt_buscar_user}" 
+                                             partialSubmit="true"
+                                             actionListener="#{agendamiento.consultarUsuario}"
+                                             update="@form,:FrmDatosPersonales,:FrmListadoAgenda,@widgetVar(growl),@widgetVar(modalUsuarios)" 
+                                             process="@form"
+                                             style="width: 200px"/>
+                        </p:panel>
+                    </div>
+                </h:form>
+                <p:spacer/>
+
+                <p:panelGrid columns="2" columnClasses="ui-grid-col-5 ui-valig-top,ui-grid-col-5 ui-valig-top" styleClass="ui-panelgrid-blank">
+
+                    <h:form id="FrmDatosPersonales">
+                        <p:outputPanel  id="DatosPersonales" style="width:100%; float: top;">
+                            <p:outputPanel >
+                                <p:panel header="#{bundle.lb_header_dp}" style="width:100%;">
+
+                                    <p:commandButton style="width:30%; float: right;"
+                                                     icon="fa fa-pencil"
+                                                     update="@widgetVar(),@form"  
+                                                     process="@form" 
+                                                     actionListener="#{agendamiento.invokeModificaCLienteWS}"/>
+
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <h:panelGrid columns="1" style="width:100%; border: none;">
+                                        
+                                        <p:outputLabel value="#{bundle.lb_tipo_dp}" for="tipoI"/>
+                                        <p:inputText id="tipoI" readonly="true" value="#{agendamiento.usuarioSAP.husetipoiden}" maxlength="15"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_cedula_dp}" for="numident"/>
+                                        <p:inputText id="numident" readonly="true" value="#{agendamiento.usuarioSAP.husanumeiden}" maxlength="15"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_pnombre_dp}" for="pnombre"/>
+                                        <p:inputText id="pnombre" readonly="true" value="#{agendamiento.usuarioSAP.huscprimernomb}" maxlength="50"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_snombre_dp}" for="pnombre2"/>
+                                        <p:inputText id="pnombre2" readonly="true" value="#{agendamiento.usuarioSAP.huscsegundnomb}" maxlength="50"/>
+
+                                        <p:outputLabel value="#{bundle.lb_papell_dp}" for="apell"/>
+                                        <p:inputText id="apell" readonly="true" value="#{agendamiento.usuarioSAP.huscprimerapel}" maxlength="50"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_sapell_dp}" for="apell2"/>
+                                        <p:inputText id="apell2" readonly="true" value="#{agendamiento.usuarioSAP.huscprimerapel}" maxlength="50"/>
+
+                                        <p:outputLabel value="#{bundle.lb_tel_dp}" for="telf"/>
+                                        <p:inputText id="telf" readonly="true" value="#{agendamiento.usuarioSAP.husccelular}" maxlength="15"/>
+
+                                        <p:outputLabel value="#{bundle.lb_email_dp}" for="emaile"/>
+                                        <p:inputText id="emaile" readonly="true" value="#{agendamiento.usuarioSAP.husccorreoelec}" maxlength="50"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_depto_dp}" for="dept"/>
+                                        <p:inputText id="dept" readonly="true" value="#{agendamiento.usuarioSAP.husndepartamen}" maxlength="50"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_muni_dp}" for="minuc"/>
+                                        <p:inputText id="minuc" readonly="true" value="#{agendamiento.usuarioSAP.husnciudad}" maxlength="50"/>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_fnaci_dp}" for="fnaci"/>
+                                        <p:inputText id="fnaci" readonly="true" value="#{agendamiento.usuarioSAP.husdfechanacim}" maxlength="15">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </p:inputText>
+                                        
+                                        <p:outputLabel value="#{bundle.lb_eps_dp}" for="eps"/>
+                                        <p:inputText id="eps" readonly="true" value="#{agendamiento.usuarioSAP.huscentidadadm}" maxlength="50"/>
+
+                                    </h:panelGrid>
+
+                                </p:panel>
+
+
+                            </p:outputPanel>
+                        </p:outputPanel>
+                    </h:form>
+
+                    <h:form id="FrmListadoAgenda">
+                        <p:outputPanel id="resultadoConsultaAgenda" style="width:100%; float: top;">
+                            <p:outputPanel>
+                                <p:panel header="#{bundle.lb_header_ag}" style="width:100%;">
+
+                                    <div class="ui-fluid">
+                                        <p:dataTable
+                                            id="novedadDetalleDatalist" 
+                                            var="item" value="#{agendamiento.lstAgendasUserDto}"
+                                            selection="#{agendamiento.agendaSelected}"
+                                            rowKey="#{item.id}"
+                                            selectionMode="single">
+
+                                            <p:ajax event="rowSelect"   update="@form" />
+                                            <p:ajax event="rowUnselect" update="@form" />
+
+                                            <p:column style="width: 25%">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.lb_prof_ag}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.profesional}"/>
+                                            </p:column>
+
+                                            <p:column style="width: 20%">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.lb_sede_ag}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.sede}">
+                                                </h:outputText>
+                                            </p:column>
+
+                                            <p:column style="width: 20%">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.lb_fecha_ag}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.fecha}">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                                </h:outputText>
+                                            </p:column>
+
+                                            <p:column style="width: 15%">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.lb_hora_ag}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.hora}"/>
+                                            </p:column>
+
+                                            <p:column style="width: 20%">
+                                                <f:facet name="header">
+                                                    <h:outputText value="#{bundle.lb_espec_ag}"/>
+                                                </f:facet>
+                                                <h:outputText value="#{item.especialidad}"/>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </div>
+
+                                </p:panel>
+
+                            </p:outputPanel>
+
+                        </p:outputPanel>
+
+                    </h:form>
+
+                </p:panelGrid>
+            </div>
+        </p:panel>
+
+
+        <p:dialog widgetVar="modalUsuarios" header="#{bundle.header_resultado}" modal="true" resizable="false" appendTo="@(body)" width="720">
+            <h:form>
+                <div class="ui-fluid">
+
+                    <p:messages id="messagesModalUsuario" closable="true" severity="error" />
+
+                    <p:dataTable id="usuariosDatalist" value="#{agendamiento.lstUsuarios}" var="item"
+                                 selectionMode="single" selection="#{agendamiento.usuarioSAP}"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowKey="#{item.huslnumero}"
+                                 rows="10"
+                                 rowsPerPageTemplate="#{bundle.rowsPerPageTemplate}">
+
+                        <p:ajax event="rowSelect"   update=":FrmDatosPersonales,:FrmListadoAgenda,@widgetVar(growl)" oncomplete="PF('modalUsuarios').hide();" listener="#{agendamiento.postLoadUsuarioSap}"/>
+                        <p:ajax event="rowUnselect" update=":FrmDatosPersonales,:FrmListadoAgenda,@widgetVar(growl)" oncomplete="PF('modalUsuarios').hide();" listener="#{agendamiento.postLoadUsuarioSap}"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_num_docu}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.husanumeiden}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.lb_nombre}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.huscprimernomb} #{item.huscprimerapel}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Telefono:"/>
+                            </f:facet>
+                            <h:outputText value="#{item.husccelular}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Email:"/>
+                            </f:facet>
+                            <h:outputText value="#{item.husccorreoelec}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

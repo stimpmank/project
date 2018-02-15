@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:adm="http://github.com/adminfaces"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/templates/template.xhtml">
+
+    <ui:define name="content_header">
+        <h2 class="align-center">
+            #{bundle.header_gestion_horario}
+        </h2>
+    </ui:define>
+
+    <ui:define name="body">
+
+        <p:panel header="#{bundle.header_gestion_horario}" id="pprincipal" >
+            <div class="ui-fluid">
+                <p:tabView id="tabViewPrincipal">
+                    <p:tab title="#{bundle.tab_general}" id="tabGeneral">
+                        <ui:include src="tab-general.xhtml"/>
+                    </p:tab>
+                    <p:tab title="#{bundle.tab_novedades}">
+                        <ui:include src="tab-novedades.xhtml"/>
+                    </p:tab>
+                </p:tabView>
+
+            </div>
+        </p:panel>
+
+        <!-- Inicio Modales Profesionales -->
+        <p:dialog widgetVar="modalProfesionales" header="#{bundle.lb_profesional_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">            
+            <p:ajax event="close" update="tabViewPrincipal:gestionHorariosProgrQuery" listener="#{gestionHorarios.resetCpprofesioDTOListByCpclinica}" />
+            <ui:include src="../fragments/modal-profesionales.xhtml">
+                <ui:param name="bean" value="#{gestionHorarios}"/>
+                <ui:param name="modalName" value="modalProfesionales"/>
+                <ui:param name="componentsUpdate" value="tabViewPrincipal:gestionHorariosProgrQuery"/>
+            </ui:include>            
+        </p:dialog>
+
+        <p:dialog widgetVar="modalProfesionalesNov" header="#{bundle.lb_profesional_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <p:ajax event="close" update="tabViewPrincipal:gestionHorariosProgrQuery" listener="#{gestionHorarios.resetCpprofesioDTOListByCpclinica}" />
+            <ui:include src="../fragments/modal-profesionales.xhtml">
+                <ui:param name="bean" value="#{gestionHorarios}"/>
+                <ui:param name="modalName" value="modalProfesionalesNov"/>
+                <ui:param name="componentsUpdate" value="tabViewPrincipal:gestionHorariosNovedQuery"/>
+            </ui:include>                        
+        </p:dialog>
+
+        <!-- Inicio Modales Sedes -->
+        <p:dialog widgetVar="modalSedes" header="#{bundle.lb_sede_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <p:ajax event="close" update="tabViewPrincipal:gestionHorariosProgrQuery" listener="#{gestionHorarios.resetCpclinicaDTOList}" />
+            <ui:include src="../fragments/modal-sedes.xhtml">
+                <ui:param name="bean" value="#{gestionHorarios}"/>
+                <ui:param name="modalName" value="modalSedes"/>
+                <ui:param name="componentsUpdate" value="tabViewPrincipal:gestionHorariosProgrQuery"/>
+            </ui:include>               
+        </p:dialog>
+
+        <p:dialog widgetVar="modalSedesNov" header="#{bundle.lb_sede_mod}" modal="true" resizable="false" appendTo="@(body)" width="900">
+            <p:ajax event="close" update="tabViewPrincipal:gestionHorariosNovedQuery" listener="#{gestionHorarios.resetCpclinicaDTOList}" />
+            <ui:include src="../fragments/modal-sedes.xhtml">
+                <ui:param name="bean" value="#{gestionHorarios}"/>
+                <ui:param name="modalName" value="modalSedesNov"/>
+                <ui:param name="componentsUpdate" value="tabViewPrincipal:gestionHorariosNovedQuery"/>
+            </ui:include>              
+        </p:dialog>
+
+    </ui:define>
+
+
+</ui:composition>
